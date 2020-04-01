@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block script %} 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="{{url_for('static', filename='main.js') }}"></script>
+{% endblock %}
+
+{% block image %}
+<img src="logo.png" height="30px"> &nbsp
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-4 border-info border-right">
+		<h4>Create Public Channel</h4>
+		<input type="text" autocomplete="off" class="form-control" id="channel_name" placeholder="Channel Name"> <br>
+		<button id="create" class="btn btn-primary rounded">Create</button>
+	</div>
+	<div class="col-8">
+		<h5>Channel List</h5>
+		<div id="channel_list">
+			{% for channel in channels %}
+				<li><a href="/channel/{{channel}}">{{channel}}</a></li>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

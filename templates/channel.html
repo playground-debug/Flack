@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+
+{% block script %} 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="{{url_for('static', filename='channel.js') }}"></script>
+{% endblock %}
+{% block content %}
+
+<h1>{{channel_name}}</h1>
+
+<div id="messages">
+	<label for="exampleFormControlTextarea1">Messages</label>
+	<div>
+		<textarea class="form-control p-3 mb-2 bg-info text-light rounded" id="chat" rows="15" readonly>
+			{%- if messages -%} 
+			{%- for message in messages -%}
+			{{ message[0] }}:  {{ message[1] }}  ({{ message [2] }}) {{'\n'}}
+			{%- endfor -%}
+			{{ '----- These are old messages -----' }}{{- '\n' -}}
+			{%- endif -%}
+		</textarea>
+	</div>
+</div>
+<br>
+<div>
+	<input autocomplete="off" autofocus class="form-control rounded-pill" type="text" id="comment" placeholder="Type your message"><br>
+	<button id="send" class="btn btn-outline-success rounded-pill">Send Message</button>
+	<button id="leave" class="btn btn-outline-danger rounded-pill">Leave Channel</button>
+	<!-- <br><br>
+	<div class="d-inline">
+		<input type="file"  accept="text/*"  name="file" id="file">
+		<button id="file" class="btn btn-outline-secondary">Send File</button>
+	</div> -->
+
+
+</div>
+
+{% endblock %}

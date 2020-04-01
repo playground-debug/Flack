@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block image %}
+<img src="logo.png" height="30px"> &nbsp
+{% endblock %}
+
+{% block content %}
+<p class="text-danger">{{error}}</p>
+<div  class="d-flex justify-content-center">
+	<form action="{{ url_for('main') }}" method="POST">
+		<div class="form-group">
+			<label>Username</label>
+			<input class="form-control" autocomplete="off" type="text" name="username" placeholder="Username">
+			<small class="form-text text-muted">The Username will be used as an identity for sending messages.</small>
+		</div>
+		<button type="submit" class="btn btn-primary">Begin!</button>
+	</form>
+</div>
+
+{% endblock %}
