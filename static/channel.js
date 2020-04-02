@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// connect to websocket
 	var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
+
 	// when connected configure buttons
 	socket.on('connect', () => {
 
@@ -27,16 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		document.querySelector('#send').onclick = () => {
 			const comment = document.querySelector('#comment').value;
-			socket.emit('comment', {'comment': comment});
+			channel_name = document.querySelector('#send').dataset.name
+			socket.emit('comment', {'comment': comment, 'channel_name': channel_name});
 		}
 
 	});
+
+	let count = 0;
 
 	socket.on('status', data => {
 
         // Broadcast message of joined user.
         let row = `${data.msg}`
         document.querySelector('#chat').value += row + '\n';
+        document.querySelector('#active').innerHTML = `${data.active}`;
     })
 
 
@@ -45,12 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Broadcast message of leaved user.
         let row = `${data.msg}`
         document.querySelector('#chat').value += row + '\n';
+        document.querySelector('#active').innerHTML = `${data.active}`;
     })
 
 	socket.on('message', data => {
 
         // Broadcast send message.
-        let row = `${data.username}:  ${data.comment}   (${data.interval})`
+        let row = `${data.username}~  ${data.comment}   (${data.interval})`
         document.querySelector('#chat').value += row + '\n';
         document.querySelector('#comment').value = '';
         document.querySelector('#send').disabled = true;

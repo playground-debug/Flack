@@ -2,6 +2,7 @@ import os
 import requests
 import time
 from collections import deque
+from datetime import datetime
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
@@ -21,6 +22,12 @@ Session(app)
 users = []
 channels = []
 messages = {}
+active = {}
+
+
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow()}
 
 
 @app.route('/')
@@ -87,24 +94,30 @@ def vote(data):
 def joined():
     room = session.get('channel')
     user = session.get('user')
+    join_room(room)
+    if active.get('room') is None:
+        active['room'] = 1
+    else:
+        active['room'] += 1
 
-    emit("status", {"username": user, "room": room,
-                    "msg": user + ' has joined the channel!'}, broadcast=True)
+    emit("status", {"username": user,
+                    "msg": user + ' has joined the channel!', "active": active['room']}, room=room)
 
 
 @socketio.on("leaved")
 def leaved():
     room = session.get('channel')
     user = session.get('user')
+    leave_room(room)
+    active['room'] -= 1
 
-    emit("status_leave", {"username": user, "room": room,
-                          "msg": user + ' has leaved the channel!'}, broadcast=True)
+    emit("status_leave", {"username": user,
+                          "msg": user + ' has leaved the channel!', "active": active['room']}, room=room)
 
 
 @socketio.on("comment")
 def comment(data):
-    room = session.get('channel')
-
+    room = data["channel_name"]
     if len(messages[room]) > 100:
         messages[room].popleft()
 
@@ -115,4 +128,4 @@ def comment(data):
     # every message having username and time associated with it
     messages[room].append([username, comment, interval])
     emit("message", {"username": username,
-                     "comment": comment, "interval": interval}, broadcast=True)
+                     "comment": comment, "interval": interval}, room=room)

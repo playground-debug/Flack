@@ -7,15 +7,16 @@
 {% endblock %}
 {% block content %}
 
-<h1>{{channel_name}}</h1>
+<h1 class="display-4 text-primary">{{channel_name}}</h1>
 
 <div id="messages">
 	<label for="exampleFormControlTextarea1">Messages</label>
+	<small class="form-text text-muted">Active Users - <span id="active"></span> </small>
 	<div>
 		<textarea class="form-control p-3 mb-2 bg-info text-light rounded" id="chat" rows="15" readonly>
 			{%- if messages -%} 
 			{%- for message in messages -%}
-			{{ message[0] }}:  {{ message[1] }}  ({{ message [2] }}) {{'\n'}}
+			{{ message[0] }}~  {{ message[1] }}  ({{ message [2] }}) {{'\n'}}
 			{%- endfor -%}
 			{{ '----- These are old messages -----' }}{{- '\n' -}}
 			{%- endif -%}
@@ -25,7 +26,7 @@
 <br>
 <div>
 	<input autocomplete="off" autofocus class="form-control rounded-pill" type="text" id="comment" placeholder="Type your message"><br>
-	<button id="send" class="btn btn-outline-success rounded-pill">Send Message</button>
+	<button id="send" data-name="{{channel_name}}" class="btn btn-outline-success rounded-pill">Send Message</button>
 	<button id="leave" class="btn btn-outline-danger rounded-pill">Leave Channel</button>
 	<!-- <br><br>
 	<div class="d-inline">
